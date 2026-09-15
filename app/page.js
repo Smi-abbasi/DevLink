@@ -8,6 +8,9 @@ import ResourceCard from "@/components/ResourceCard";
 export default function Home(){
   const[search,setSearch]=useState("");
   const[selectedCategory,setSelectedCategory]=useState("All");
+  
+  const[bookmarks,setBookmarks]=useState([]);
+  const [showSavedOnly,setShowSavedOnly] = useState(false);
 
   const searchParams=useSearchParams();
   const router=useRouter();
@@ -22,6 +25,30 @@ export default function Home(){
   
   },[searchParams]);
 
+  useEffect(()=> {
+    const savedBookmarks = localStorage.getItem("devlink-bookmarks");
+    if(savedBookmarks){
+      setBookmarks(JSON.parse(savedBookmarks));
+    }
+  },[]);
+
+  useEffect(()=>{
+    localStorage.setItem(
+      "devlink-bookmarks",
+      JSON.stringify(bookmarks)
+    );
+  },[bookmarks]);
+
+  function toggleBookmark(resourceId){
+    setBookmarks((currentBookmarks)=>{
+      if(currentBookmarks.includes(resourceId)){
+        return currentBookmarks.filter((id)=>id!==resourceId);
+
+      }
+      return[...currentBookmarks,resourceId];
+    });
+  }
+
   function updateUrl(searchValue,categoryValue){
     const params = new URLSearchParams();
 
@@ -32,7 +59,7 @@ export default function Home(){
       params.set("category", categoryValue);
     }
     const queryString=params.toString();
-    router.push(
+    router.replace(
       queryString?`${pathname}?${queryString}`:pathname
     );
   }
@@ -72,11 +99,11 @@ export default function Home(){
       {/*main*/}
       <section className="mx-auto max-w-7xl px-6 py-10">
        <div>
-          <h2 className="mx-auto max-w-7xl px-6 py-10">
-            Developers Resources
+          <h2 className="text-3xl font-bold text-gray-900">
+            Developer Resources
           </h2>
           <p className="mt-2 text-gray-600">
-            Explore tools, libraries,APIs, and framworks.
+            Explore tools, libraries,APIs, and frameworks.
           </p>
         </div> 
       {/*search*/}
@@ -86,7 +113,9 @@ export default function Home(){
       placeholder="Search resource..."
       value={search}
       onChange={(event)=>{const value=event.target.value;
-        setSearch(event.target.value)}}
+        setSearch(value)
+      updateUrl(value,selectedCategory);
+    }}
       className="w-full border border-gray-300 bg-white px-4 py-3 text-gray-900 outline-none focus:border-gray-900 sm:max-w-xl"
       />
      </div>
