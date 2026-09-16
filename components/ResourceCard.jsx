@@ -1,15 +1,28 @@
-export default function ResourceCard({resource}){
+export default function ResourceCard({resource,isBookmarked,onToggleBookmark,}){
     return(
         <article className="border border-gray-200 bg-white p-5">
+           <div className="flex items-start justify-between gap-4">
             <span className="text-sm font-medium text-blue-600">
                 {resource.category}
             </span>
-            <h2 className="mt-2 text-xl font-semibold text-gray=900">
+           
+            <button type="button" onClick={()=>onToggleBookmark(resource.id)}
+              arial-label={
+                isBookmarked?`Remove${resource.title} from bookmarks`:`Bookmark ${resource.title}`
+              }
+              className="text-xl text-gray-700 hover:text-grau--black">
+                {isBookmarked ? "♥" : "♡"}    
+             </button>
+             </div> 
+
+              <h2 className="mt-2 text-xl font-semibold text-gray=900">
                 {resource.title}
             </h2>
+
             <p className="mt-2 text-sm tet-gray-600">
                 {resource.description}
             </p>
+
             <div className="mt-4 flex-wrap gap-2">
                 {resource.tags.map((tag)=>
                 (<span key={tag} className="text-xs text-gray-500">

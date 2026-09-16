@@ -12,6 +12,8 @@ export default function Home(){
   const[bookmarks,setBookmarks]=useState([]);
   const [showSavedOnly,setShowSavedOnly] = useState(false);
 
+  const [selectedResource, setSelectedResource]= useState(null);
+
   const searchParams=useSearchParams();
   const router=useRouter();
   const pathname= usePathname();
@@ -80,7 +82,9 @@ export default function Home(){
     const matchesCategory=
     selectedCategory==="All" ||
     resource.category=== selectedCategory;
-    return matchesSearch && matchesCategory
+    const matchesBookmark =
+    !showSavedOnly || bookmarks.includes(resource.id);
+    return matchesSearch && matchesCategory && matchesBookmark;
   });
 
   return(
@@ -106,7 +110,9 @@ export default function Home(){
             Explore tools, libraries,APIs, and frameworks.
           </p>
         </div> 
+
       {/*search*/}
+
      <div className="mt-8">
       <input
       type="text"
@@ -137,7 +143,19 @@ export default function Home(){
             {category}
           </button>
         ))}
+        <button
+            type="button"
+            onClick={() => setShowSavedOnly((current) => !current)}
+            className={`border px-4 py-2 text-sm font-medium ${
+              showSavedOnly
+                ? "border-gray-900 bg-gray-900 text-white"
+                : "border-gray-300 bg-white text-gray-700 hover:border-gray-900"
+            }`}
+          >
+            {showSavedOnly ? "Show All" : "Show Saved Only"}
+          </button>
       </div>
+
       {/* Resource Count */}
       <p className="mt-8 text-sm text-gray-500">
         showing {filteredResources.length} resources
@@ -148,9 +166,13 @@ export default function Home(){
           <ResourceCard
           key={resource.id}
           resource={resource}
+          isBookmarked={bookmarks.includes(resource.id)}
+          onToggleBookmark={toggleBookmark}
+          onSelectedsource={setSelectedResource}
           />
         ))}
       </div>
+
        {/*empty handeling*/}
       {filteredResources.length === 0 &&(
         <p className="mt-10 text-center text-gray-500">
@@ -158,6 +180,49 @@ export default function Home(){
           No resource found. Try another search or category.
         </p>
       )}
+      {selectedResource && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="w-full max-w-lg bg-white p-6">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-sm font-medium text-blue-600">
+            {selectedResource.category}
+          </p>
+          <h2 className="mt-2 text-2xl font-bold text-gray-900">
+            {selectedResource.title}
+          </h2>
+        </div>
+        <button
+          type="button" onClick={() => setSelectedResource(null)}
+          className="text-2xl text-gray-500 hover:text-gray-900" aria-label="Close modal">
+          ×
+        </button>
+      </div>
+      <p className="mt-4 text-gray-600">
+        {selectedResource.description}
+      </p>
+      <p className="mt-5 text-sm text-gray-700">
+        <strong>Pricing:</strong> {selectedResource.pricing}
+      </p>
+      <div className="mt-5">
+        <p className="text-sm font-medium text-gray-900">
+          Installation
+        </p>
+        <code className="mt-2 block bg-gray-100 p-3 text-sm text-gray-800">
+          {selectedResource.install}
+        </code>
+      </div>
+      <a
+        href={selectedResource.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-6 inline-block text-sm font-medium text-gray-900 underline"
+      >
+        Official Documentation
+      </a>
+    </div>
+  </div>
+)}
       </section>
     </main>
   );
