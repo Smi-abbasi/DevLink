@@ -87,19 +87,37 @@ export default function Home(){
     return matchesSearch && matchesCategory && matchesBookmark;
   });
 
+  const relatedResources = selectedResource ? resources.filter((resource)=> resource.category === selectedResource.category && resource.id !== selectedResource.id):[];
+
   return(
     <main className="min-h-screen bg-gray-50">
       {/*header*/}
-      <header className="border-b bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-5">
-          <h1 className="text-2xl font-bold text-gray-900">
-            DevLink By SMI
-          </h1>
-          <p className="mt-1 text-sm text-gray-600">
-            Discover useful resources for developers.
-          </p>
-          </div> 
-      </header>
+      <header className="border-b border-gray-200 bg-white">
+          <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center bg-gray-900 text-lg font-bold text-white">
+                D
+              </div>
+              <div>
+                <h1 className="text-xl font-bold tracking-tight text-gray-900">
+                  DevLink
+                </h1>
+                <p className="text-sm text-gray-500">
+                  Developer Resource Hub
+                </p>
+              </div>
+            </div>
+
+            <div className="hidden text-right sm:block">
+              <p className="text-sm font-medium text-gray-900">
+                Discover. Save. Build.
+              </p>
+              <p className="mt-1 text-xs text-gray-500">
+                Useful resources for developers
+              </p>
+            </div>
+          </div>
+        </header>
       {/*main*/}
       <section className="mx-auto max-w-7xl px-6 py-10">
        <div>
@@ -168,7 +186,7 @@ export default function Home(){
           resource={resource}
           isBookmarked={bookmarks.includes(resource.id)}
           onToggleBookmark={toggleBookmark}
-          onSelectedsource={setSelectedResource}
+          onSelectResource={setSelectedResource}
           />
         ))}
       </div>
@@ -212,6 +230,28 @@ export default function Home(){
           {selectedResource.install}
         </code>
       </div>
+
+      {relatedResources.length > 0 && (
+  <div className="mt-6">
+    <h3 className="text-sm font-semibold text-gray-900">
+      Related Tools
+    </h3>
+
+    <div className="mt-2 space-y-2">
+      {relatedResources.map((resource) => (
+        <button
+          key={resource.id}
+          type="button"
+          onClick={() => setSelectedResource(resource)}
+          className="block text-sm text-gray-700 underline hover:text-black"
+        >
+          {resource.title}
+        </button>
+          ))}
+        </div>
+      </div>
+    )}
+
       <a
         href={selectedResource.url}
         target="_blank"
