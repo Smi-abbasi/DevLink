@@ -16,13 +16,16 @@ export default function ResourceCard({resource,isBookmarked,onToggleBookmark,onS
              </div> 
 
               <h2 onClick={()=> onSelectResource(resource)} 
-              className="mt-2 text-xl font-semibold text-gray-900">
+              className="mt-2  cursor-pointer text-xl font-semibold text-gray-900 hover:text-blue-600">
                 {resource.title}
             </h2>
 
             <p className="mt-2 text-sm text-gray-600">
                 {resource.description}
             </p>
+            <button type="button" onClick={()=>onSelectResource(resource)} className="mt-4 text-sm font-semibold text-gray-900 underline underline-offset-4 hover:text-blue-600">
+                View Details →
+            </button>
 
             <div className="mt-4 flex-wrap gap-2">
                 {resource.tags.map((tag)=>
