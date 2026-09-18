@@ -1,11 +1,12 @@
 "use client";
 
-import {useEffect,useState} from "react";
+
+import {Suspense, useEffect,useState} from "react";
 import {useSearchParams, useRouter, usePathname} from "next/navigation";
 import resources from "@/data/resources";
 import ResourceCard from "@/components/ResourceCard";
 
-export default function Home(){
+function DevLinkContent(){
   const[search,setSearch]=useState("");
   const[selectedCategory,setSelectedCategory]=useState("All");
   
@@ -99,12 +100,18 @@ export default function Home(){
     const matchesCategory=
     selectedCategory==="All" ||
     resource.category=== selectedCategory;
+    
     const matchesBookmark =
     !showSavedOnly || bookmarks.includes(resource.id);
+    
     return matchesSearch && matchesCategory && matchesBookmark;
   });
 
-  const relatedResources = selectedResource ? resources.filter((resource)=> resource.category === selectedResource.category && resource.id !== selectedResource.id):[];
+  const relatedResources = selectedResource 
+  ? resources.filter(
+    (resource)=> resource.category === selectedResource.category && 
+    resource.id !== selectedResource.id
+  ):[];
 
   return(
     <main className="min-h-screen bg-gray-50">
@@ -238,7 +245,7 @@ export default function Home(){
           ×
         </button>
       </div>
-      
+
       <p className="mt-4 text-gray-600">
         {selectedResource.description}
       </p>
@@ -290,5 +297,14 @@ export default function Home(){
 )}
       </section>
     </main>
+  );
+}
+
+export default function Home(){
+  return(
+    <Suspense fallback={<div>Loading DevLink...</div>}>
+      <DevLinkContent />
+    </Suspense>
+
   );
 }
