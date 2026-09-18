@@ -41,6 +41,17 @@ export default function Home(){
     );
   },[bookmarks]);
 
+  useEffect(()=>{
+    function handleEscape(event){
+      if(event.key==="Escape"){
+        setSelectedResource(null);
+      }
+    }
+    document.addEventListener("keydown",handleEscape);
+    return()=>{document.removeEventListener("keydown",handleEscape)};
+
+  },[]);
+
   function toggleBookmark(resourceId){
     setBookmarks((currentBookmarks)=>{
       if(currentBookmarks.includes(resourceId)){
@@ -64,6 +75,12 @@ export default function Home(){
     router.replace(
       queryString?`${pathname}?${queryString}`:pathname
     );
+  }
+  function clearFilters(){
+    setSearch("");
+    setSelectedCategory("All");
+    setShowSavedOnly(false);
+    router.replace(pathname);
   }
   
   const categories=[
@@ -172,9 +189,14 @@ export default function Home(){
           >
             {showSavedOnly ? "Show All" : "Show Saved Only"}
           </button>
+
+          <button type="button" onClick={clearFilters} className="border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-900 ">
+           Clear Filters
+          </button>
       </div>
 
       {/* Resource Count */}
+
       <p className="mt-8 text-sm text-gray-500">
         showing {filteredResources.length} resources
       </p>
@@ -211,11 +233,12 @@ export default function Home(){
           </h2>
         </div>
         <button
-          type="button" onClick={() => setSelectedResource(null)}
-          className="text-2xl text-gray-500 hover:text-gray-900" aria-label="Close modal">
+          type="button" onClick={() => setSelectedResource(null)} aria-label="Close resource details"
+          className=" rounded-sm text-2xl text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
           ×
         </button>
       </div>
+      
       <p className="mt-4 text-gray-600">
         {selectedResource.description}
       </p>
@@ -231,6 +254,16 @@ export default function Home(){
         </code>
       </div>
 
+      <a
+        href={selectedResource.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-6 inline-block text-sm font-medium text-gray-900 underline"
+      >
+        Official Documentation
+      </a>
+
+      
       {relatedResources.length > 0 && (
   <div className="mt-6">
     <h3 className="text-sm font-semibold text-gray-900">
@@ -252,14 +285,6 @@ export default function Home(){
       </div>
     )}
 
-      <a
-        href={selectedResource.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-6 inline-block text-sm font-medium text-gray-900 underline"
-      >
-        Official Documentation
-      </a>
     </div>
   </div>
 )}

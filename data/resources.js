@@ -74,7 +74,17 @@ const resources=[
         pricing: "Free plan available",
         install: "Deploy through the Vercel dashboard",
         },
-         
+        {
+            id: "github-api",
+            title: "GitHub API",
+            description: "An API for interacting with GitHub repositories and developer data.",
+            category: "API Tools",
+            tags: ["api", "github", "rest"],
+            url: "https://docs.github.com/en/rest",
+            pricing: "Free with rate limits",
+            install: "No installation required",
+            },
+                    
 ];
 
 export default resources;
