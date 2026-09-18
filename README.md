@@ -5,6 +5,13 @@ A dynamic developer resource hub built with **Next.js** and **Tailwind CSS** for
 
 DevLink provides a focused directory of developer tools, frameworks, APIs, UI libraries, and other resources through a responsive single-page interface.
 
+## Live Demo
+
+**DevLink is deployed and available online.**
+
+🔗 [**Visit DevLink →**](https://dev-link-by-smi.vercel.app/)
+
+
 ## Overview
 
 Finding useful developer resources often means searching through many websites, bookmarks, and documentation pages.
