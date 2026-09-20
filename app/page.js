@@ -1,6 +1,5 @@
 "use client";
 
-
 import {Suspense, useEffect,useState} from "react";
 import {useSearchParams, useRouter, usePathname} from "next/navigation";
 import resources from "@/data/resources";
@@ -11,6 +10,8 @@ function DevLinkContent(){
   const[selectedCategory,setSelectedCategory]=useState("All");
   
   const[bookmarks,setBookmarks]=useState([]);
+  const [bookmarksLoaded, setBookmarksLoaded] = useState(false);
+
   const [showSavedOnly,setShowSavedOnly] = useState(false);
 
   const [selectedResource, setSelectedResource]= useState(null);
@@ -33,14 +34,16 @@ function DevLinkContent(){
     if(savedBookmarks){
       setBookmarks(JSON.parse(savedBookmarks));
     }
+  setBookmarksLoaded(true);
   },[]);
 
   useEffect(()=>{
+    if(!bookmarksLoaded) return;
     localStorage.setItem(
       "devlink-bookmarks",
       JSON.stringify(bookmarks)
     );
-  },[bookmarks]);
+  },[bookmarks,bookmarksLoaded]);
 
   useEffect(()=>{
     function handleEscape(event){
@@ -77,6 +80,7 @@ function DevLinkContent(){
       queryString?`${pathname}?${queryString}`:pathname
     );
   }
+  
   function clearFilters(){
     setSearch("");
     setSelectedCategory("All");
