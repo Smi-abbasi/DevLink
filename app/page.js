@@ -92,6 +92,7 @@ function DevLinkContent(){
     "All",
     ...new Set(resources.map((resource)=>resource.category)),
   ];
+  
   const filteredResources=resources.filter((resource)=>{
     const searchText=search.toLowerCase();
 
