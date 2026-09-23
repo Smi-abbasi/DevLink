@@ -4,10 +4,12 @@ import {Suspense, useEffect,useState} from "react";
 import {useSearchParams, useRouter, usePathname} from "next/navigation";
 import resources from "@/data/resources";
 import ResourceCard from "@/components/ResourceCard";
+import Header from "@/components/Header";
+import ResourceFilters from "@/components/ResourceFilters";
+import ResourceModal from "@/components/ResourceModal";
 
 function DevLinkContent(){
-  const[search,setSearch]=useState("");
-  const[selectedCategory,setSelectedCategory]=useState("All");
+  
   
   const[bookmarks,setBookmarks]=useState([]);
   const [bookmarksLoaded, setBookmarksLoaded] = useState(false);
@@ -18,16 +20,11 @@ function DevLinkContent(){
 
   const searchParams=useSearchParams();
   const router=useRouter();
+
   const pathname= usePathname();
+  const search=searchParams.get("search")||"";
+  const selectedCategory=searchParams.get("category")|| "All";
 
-  useEffect(()=>{
-    const urlSearch=searchParams.get("search")||"";
-    const urlCategory = searchParams.get("category")||"All";
-
-    setSearch(urlSearch);
-    setSelectedCategory(urlCategory);
-  
-  },[searchParams]);
 
   useEffect(()=> {
     const savedBookmarks = localStorage.getItem("devlink-bookmarks");
@@ -82,8 +79,7 @@ function DevLinkContent(){
   }
   
   function clearFilters(){
-    setSearch("");
-    setSelectedCategory("All");
+    
     setShowSavedOnly(false);
     router.replace(pathname);
   }
@@ -120,6 +116,7 @@ function DevLinkContent(){
 
   return(
     <main className="min-h-screen bg-gray-50">
+      <Header />
       {/*main*/}
       <section className="mx-auto max-w-7xl px-6 py-10">
        <div>
@@ -130,55 +127,10 @@ function DevLinkContent(){
             Explore tools, libraries,APIs, and frameworks.
           </p>
         </div> 
+       {/*resource filters*/}
 
-      {/*search*/}
-
-     <div className="mt-8">
-      <input
-      type="text"
-      placeholder="Search resource..."
-      value={search}
-      onChange={(event)=>{const value=event.target.value;
-        setSearch(value)
-      updateUrl(value,selectedCategory);
-    }}
-      className="w-full border border-gray-300 bg-white px-4 py-3 text-gray-900 outline-none focus:border-gray-900 sm:max-w-xl"
-      />
-     </div>
-      {/*categories*/}     
-      <div className="mt-6 flex flex-wrap gap-3">
-        {categories.map((category)=>(
-          <button
-          key={category}
-          onClick={()=>{ setSelectedCategory(category);
-            updateUrl(search,category);
-          }}
-          className={`border px-4 py-2 text-sm font-medium ${
-            selectedCategory === category
-            ? "border-gray-900 bg-gray-900 text-white"
-            : "border-gray-300 bg-white text-gray-700 hover:border-gray-900"
-
-          }`}
-          >
-            {category}
-          </button>
-        ))}
-        <button
-            type="button"
-            onClick={() => setShowSavedOnly((current) => !current)}
-            className={`border px-4 py-2 text-sm font-medium ${
-              showSavedOnly
-                ? "border-gray-900 bg-gray-900 text-white"
-                : "border-gray-300 bg-white text-gray-700 hover:border-gray-900"
-            }`}
-          >
-            {showSavedOnly ? "Show All" : "Show Saved Only"}
-          </button>
-
-          <button type="button" onClick={clearFilters} className="border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-900 ">
-           Clear Filters
-          </button>
-      </div>
+     <ResourceFilters search={search} selectedCategory={selectedCategory}  categories={categories} showSavedOnly={showSavedOnly} setShowSavedOnly={setShowSavedOnly} updateUrl={updateUrl} clearFilters={clearFilters}
+     />
 
       {/* Resource Count */}
 
@@ -205,74 +157,11 @@ function DevLinkContent(){
           No resource found. Try another search or category.
         </p>
       )}
-      {selectedResource && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-    <div className="w-full max-w-lg bg-white p-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-medium text-blue-600">
-            {selectedResource.category}
-          </p>
-          <h2 className="mt-2 text-2xl font-bold text-gray-900">
-            {selectedResource.title}
-          </h2>
-        </div>
-        <button
-          type="button" onClick={() => setSelectedResource(null)} aria-label="Close resource details"
-          className=" rounded-sm text-2xl text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
-          ×
-        </button>
-      </div>
+    <ResourceModal  resource={selectedResource}  relatedResources={relatedResources}
+        onClose={() => setSelectedResource(null)}
+        onSelectResource={setSelectedResource}
+      />
 
-      <p className="mt-4 text-gray-600">
-        {selectedResource.description}
-      </p>
-      <p className="mt-5 text-sm text-gray-700">
-        <strong>Pricing:</strong> {selectedResource.pricing}
-      </p>
-      <div className="mt-5">
-        <p className="text-sm font-medium text-gray-900">
-          Installation
-        </p>
-        <code className="mt-2 block bg-gray-100 p-3 text-sm text-gray-800">
-          {selectedResource.install}
-        </code>
-      </div>
-
-      <a
-        href={selectedResource.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-6 inline-block text-sm font-medium text-gray-900 underline"
-      >
-        Official Documentation
-      </a>
-
-      
-      {relatedResources.length > 0 && (
-  <div className="mt-6">
-    <h3 className="text-sm font-semibold text-gray-900">
-      Related Tools
-    </h3>
-
-    <div className="mt-2 space-y-2">
-      {relatedResources.map((resource) => (
-        <button
-          key={resource.id}
-          type="button"
-          onClick={() => setSelectedResource(resource)}
-          className="block text-sm text-gray-700 underline hover:text-black"
-        >
-          {resource.title}
-        </button>
-          ))}
-        </div>
-      </div>
-    )}
-
-    </div>
-  </div>
-)}
       </section>
     </main>
   );

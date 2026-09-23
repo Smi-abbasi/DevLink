@@ -1,13 +1,17 @@
+import {useEffect,useState} from "react";
+
+const [searchInput, setSearchInput]= useState(search);
+
+
 export default function ResourceFilters({
-search, setSearch,selectedCategory, setSelcetedCategory,categories,showSavedOnly, setSHowSavedOnly, updateUrl, clearFilters,
+search,selectedCategory,categories,showSavedOnly, setShowSavedOnly, updateUrl, clearFilters,
 }){
     return(
         <>
         {/*search*/}
         <div className="mt-8">
             <input type="text" placeholder="Search resource..." value={search}
-            onChange={(event)=>{const value=event.target.value;
-                setSearch(value); updateUrl(value,selectedCategory);
+            onChange={(event)=>{updateUrl(event.target.value,selectedCategory);
             }}
             className="w-full border border-gray-300 bg-white px-4 py-3 text-gray-900 outline-none focus:border-gray-900 sm:max-w-xl"
           />
@@ -21,15 +25,31 @@ search, setSearch,selectedCategory, setSelcetedCategory,categories,showSavedOnly
 
             <div className="flex flex-wrap gap-3">
                 {categories.map((category)=>(
-                    <button key= {category} type="button" onClick={()=>{selectedCategory(category); updateUrl(search, category);
+                    <button key= {category} type="button" onClick={()=>{updateUrl(search, category);
                     }}
                     className={`border px-4 py-2 text-sm font-medium ${selectedCategory=== category ?
-                        "border-gray-900 bg-gray text-white" : "border-gray-300 bg-white text-gray-700 hover:border-gray-900" 
+                        "border-gray-900 bg-gray-500 text-white" : "border-gray-300 bg-white text-gray-700 hover:border-gray-900" 
                     }`}  >
                         {category}
                     </button>
                 ))}
             </div>
         </div>
+         
+         {/*Actions*/}
+         <div className="mt-4 flex flex-wrap gap-3">
+            <button type="button" onClick={()=> setShowSavedOnly((current)=> !current)}
+            className={`border px-4 py-2 text-sm font-medium ${
+                showSavedOnly ? "border-gray-900 bg-gray-900 text-white": "border-gray-300 bg-white text-gray-700 hover:border-gray-900"} `
+            }>
+                {showSavedOnly ? "Show All": "Show Saved Only"}
+                </button>
+
+            <button type="button" onClick={clearFilters} className="border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hove:border-gray-900"
+            >
+            Clear Filters
+            </button>
+         </div>
         </>
-)}
+);
+}
