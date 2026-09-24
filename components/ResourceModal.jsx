@@ -4,14 +4,14 @@ export default function ResourceModal({
     if(!resource){
         return null;
     }
-
     function handleOverlayClick(event){
-        if(event.target=== event.currenTraget){
+        if(event.target=== event.currentTarget){
             onClose();
         }
     }
     return(
-        <div className="fixed insect-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" role="dialog"
+aria-modal="true"
         onClick={handleOverlayClick} >
             <div className="w-full max-w-lg bg-white p-6">
                 <div className="flex items-start justify-between gap-4">
@@ -58,7 +58,7 @@ export default function ResourceModal({
                         <div className="mt-3 space-y-2">
                             {relatedResources.map((relatedResource)=>(
                                 <button key={relatedResource.id} type="button" onClick={()=>onSelectedResource(relatedResource)}
-                                className="block text-sm test-gray-700 underline underline-offset-4 hover:text-blue-600">
+                                className="block text-sm text-gray-700 underline underline-offset-4 hover:text-blue-600">
                                     
                                     {relatedResource.title}
                                 </button>

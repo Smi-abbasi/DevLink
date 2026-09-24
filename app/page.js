@@ -11,10 +11,10 @@ import ResourceModal from "@/components/ResourceModal";
 function DevLinkContent(){
   
   
-  const[bookmarks,setBookmarks]=useState([]);
+  const[bookmarks, setBookmarks]=useState([]);
   const [bookmarksLoaded, setBookmarksLoaded] = useState(false);
 
-  const [showSavedOnly,setShowSavedOnly] = useState(false);
+  const [showSavedOnly, setShowSavedOnly] = useState(false);
 
   const [selectedResource, setSelectedResource]= useState(null);
 
@@ -79,7 +79,6 @@ function DevLinkContent(){
   }
   
   function clearFilters(){
-    
     setShowSavedOnly(false);
     router.replace(pathname);
   }
@@ -159,7 +158,7 @@ function DevLinkContent(){
       )}
     <ResourceModal  resource={selectedResource}  relatedResources={relatedResources}
         onClose={() => setSelectedResource(null)}
-        onSelectResource={setSelectedResource}
+        onSelectedResource={setSelectedResource}
       />
 
       </section>

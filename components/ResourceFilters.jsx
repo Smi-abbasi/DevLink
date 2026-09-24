@@ -1,18 +1,25 @@
 import {useEffect,useState} from "react";
 
-const [searchInput, setSearchInput]= useState(search);
-
 
 export default function ResourceFilters({
 search,selectedCategory,categories,showSavedOnly, setShowSavedOnly, updateUrl, clearFilters,
 }){
+    const [searchInput, setSearchInput]= useState(search);
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    updateUrl(searchInput, selectedCategory);
+  }, 400);
+
+  return () => clearTimeout(timer);
+}, [searchInput, selectedCategory,updateUrl]);
+
     return(
         <>
         {/*search*/}
         <div className="mt-8">
-            <input type="text" placeholder="Search resource..." value={search}
-            onChange={(event)=>{updateUrl(event.target.value,selectedCategory);
-            }}
+            <input type="text" placeholder="Search resource..." value={searchInput}
+            onChange={(event)=>setSearchInput(event.target.value)}
             className="w-full border border-gray-300 bg-white px-4 py-3 text-gray-900 outline-none focus:border-gray-900 sm:max-w-xl"
           />
         </div>
@@ -28,7 +35,7 @@ search,selectedCategory,categories,showSavedOnly, setShowSavedOnly, updateUrl, c
                     <button key= {category} type="button" onClick={()=>{updateUrl(search, category);
                     }}
                     className={`border px-4 py-2 text-sm font-medium ${selectedCategory=== category ?
-                        "border-gray-900 bg-gray-500 text-white" : "border-gray-300 bg-white text-gray-700 hover:border-gray-900" 
+                        "border-gray-900 bg-gray-900 text-white" : "border-gray-300 bg-white text-gray-700 hover:border-gray-900" 
                     }`}  >
                         {category}
                     </button>
@@ -45,7 +52,7 @@ search,selectedCategory,categories,showSavedOnly, setShowSavedOnly, updateUrl, c
                 {showSavedOnly ? "Show All": "Show Saved Only"}
                 </button>
 
-            <button type="button" onClick={clearFilters} className="border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hove:border-gray-900"
+            <button type="button" onClick={clearFilters} className="border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-900"
             >
             Clear Filters
             </button>

@@ -2,7 +2,7 @@ const resources=[
     {
         id:1,
         title:"OpenAI",
-        description:"AI models and APIs for building intelligent applications.",
+        description:"AI models and APIs for building intelligent applications, AI-powered tools, and innovative developer solutions.",
         category:"AI Tools",
         tags:["ai","api","models"],
         url:"https://platform.openai.com",

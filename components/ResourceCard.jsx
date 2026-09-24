@@ -21,7 +21,7 @@ export default function ResourceCard({resource,isBookmarked,onToggleBookmark,onS
                 {resource.description}
             </p>
 
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap gap-2">
                 {resource.tags.map((tag)=>
                 (<span key={tag} className="text-xs text-gray-500 ">
                     #{tag}
@@ -30,12 +30,14 @@ export default function ResourceCard({resource,isBookmarked,onToggleBookmark,onS
 
            
             </div>
-            <button type="button" onClick={()=>onSelectResource(resource)} className="mt-4 text-sm font-semibold hidden text-right sm:block text-gray-900 underline underline-offset-4 hover:text-blue-600">
+            <div className="mt-4 flex items-center justify-between">
+            <button type="button" onClick={()=>onSelectResource(resource)} className="mt-4 text-sm font-semibold hidden  sm:block text-gray-900 underline underline-offset-4 hover:text-blue-600">
                 View Details →
             </button>
-            <a href={resource.url} target="_blank" rel="noopener noreferrer" className="mt-4 text-right text-sm font-semibold text-gray-900 underline underline-offset-4 hover:text-blue-600">
+            <a href={resource.url} target="_blank" rel="noopener noreferrer" className="mt-4 text-sm font-semibold text-gray-900 underline underline-offset-4 hover:text-blue-600">
                 Visit Resource
             </a>
+         </div>
         </article>
     )
 }
